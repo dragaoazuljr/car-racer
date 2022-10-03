@@ -6,20 +6,27 @@ public class CarMoviment : MonoBehaviour
     [SerializeField]
     public float speed = 10f;
     [SerializeField]
-    public float multiplier = 0.1f;
-    [SerializeField]
     public float springStrength = 1f;
     [SerializeField]
     public float springDamper= 1f;
     [SerializeField]
-    public Camera mainCamera;
-    [SerializeField]
-    [Range(0f, 1f)]
+    [Range(0f, 2f)]
     public float tireGripFactor = 0.5f;
     [SerializeField]
     public bool ForwardWheelDrive = true;
     [SerializeField]
     public float tireMass = 1f;
+    [SerializeField]
+    public GameObject centerOfMass;
+    [SerializeField]
+    [Range(0, 1f)]
+    public float springTravelDistance = 1f;
+    [SerializeField]
+    [Range(0.75f, 1f)]
+    public float wheelTurningDistance = 0.05f;
+    [SerializeField]
+    [Range(0f, 10f)]
+    public float wheelTurningVelocity;
 
     [SerializeField]
     List<GameObject> carWheels;
@@ -32,6 +39,8 @@ public class CarMoviment : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        Transform centerOfMassTransform = centerOfMass.GetComponent<Transform>();
+        rb.centerOfMass = centerOfMassTransform.position;
     }
 
     void OnDrawGizmos() {
@@ -53,9 +62,7 @@ public class CarMoviment : MonoBehaviour
     void Update()
     { 
         //position camera behind car
-        Vector3 offset = new Vector3(0f, 2f, -7f);
-
-        mainCamera.transform.position = transform.position + offset;
+        Vector3 offset = new Vector3(0f, 5f, -7f);
 
         throttleInput = Input.GetAxisRaw("Acceleration");
         steerInput = Input.GetAxisRaw("Steer");
@@ -78,9 +85,9 @@ public class CarMoviment : MonoBehaviour
         Debug.DrawRay(ray.origin, ray.direction * 0.3f);
 
         if (Physics.Raycast(ray, out hit)) {
-          if (hit.distance <= 0.3f) {
+          if (hit.distance <= springTravelDistance) {
             Vector3 tireWorldVelocity = rb.GetPointVelocity(wheelTransform.position);
-            CalculateSuspentionForce(wheelTransform, tireWorldVelocity);
+            CalculateSuspentionForce(wheelTransform, tireWorldVelocity, hit.distance);
             CalculateSteeringForce(wheelTransform, tireWorldVelocity);
 
             if (throttleInput != 0) {
@@ -91,10 +98,10 @@ public class CarMoviment : MonoBehaviour
       }
     }
 
-    void CalculateSuspentionForce(Transform wheelTransform, Vector3 tireWorldVelocity) {
+    void CalculateSuspentionForce(Transform wheelTransform, Vector3 tireWorldVelocity, float hitDistance) {
       Vector3 springDir = wheelTransform.up;
 
-      float offset = transform.position.y + 0.3f;
+      float offset = springTravelDistance - hitDistance;
       float vel = Vector3.Dot(springDir, tireWorldVelocity);
 
       float force = (offset * springStrength) - (vel * springDamper);
@@ -112,7 +119,7 @@ public class CarMoviment : MonoBehaviour
 
       float desiredVelChange = -steeringVel * tireGripFactor;
 
-      float desiredAccel = desiredVelChange / Time.deltaTime;
+      float desiredAccel = desiredVelChange / Time.fixedDeltaTime;
 
       Vector3 force = steeringDir * tireMass * desiredAccel;
 
@@ -139,10 +146,10 @@ public class CarMoviment : MonoBehaviour
       Transform wheelTransform = wheel.GetComponent<Transform>();
       Vector3 wheelPointedDir = wheelTransform.forward;
 
-      Vector3 force = new Vector3(wheelPointedDir.x, wheelPointedDir.y, wheelPointedDir.z * throttleInput * speed);
+      Vector3 force = wheelPointedDir * throttleInput * speed;
 
-      Ray throttleForceRay = new Ray(wheelTransform.position, wheelTransform.TransformDirection(-wheelTransform.forward));
-      Debug.DrawRay(wheelTransform.position,  force, Color.blue);
+      Ray throttleForceRay = new Ray(wheelTransform.position, wheelTransform.TransformDirection(wheelTransform.forward));
+      Debug.DrawRay(wheelTransform.position, force, Color.blue);
 
       rb.AddForceAtPosition(force, wheelTransform.position);
     }
@@ -163,16 +170,18 @@ public class CarMoviment : MonoBehaviour
           Debug.DrawRay(carFowardRay.origin, carFowardRay.direction, Color.magenta);
           Debug.DrawRay(crossFowardRay.origin, crossFowardRay.direction, Color.white);
 
-          if (wheelCarCross.y > 0  && wheelCarFowardDot != 1 && input == 0) {
-            wheel.Rotate(0, 1 * multiplier, 0);
+
+          if (input != 0 && wheelCarFowardDot >= wheelTurningDistance) {
+            wheel.Rotate(new Vector3(0, input * wheelTurningVelocity, 0));
+          } else if (wheelCarCross.y > 0  && wheelCarFowardDot != 1 && input == 0) {
+            if (wheelCarCross.y >= 0.01f) {
+              wheel.Rotate(0, (1 - wheelCarCross.y) * wheelTurningVelocity, 0);
+            }
           } else if (wheelCarCross.y < 0 && wheelCarFowardDot != 1 && input == 0) {
-            wheel.Rotate(0, -1 * multiplier, 0);
+            if (wheelCarCross.y <= -0.01f) {
+              wheel.Rotate(0, wheelCarCross.y * wheelTurningVelocity, 0);
+            }
           }
-
-          if (input != 0 && wheelCarFowardDot >= 0.7) {
-            wheel.Rotate(new Vector3(0, input * multiplier, 0));
-          }
-
         };
 
         index++;
