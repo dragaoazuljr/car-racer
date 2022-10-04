@@ -244,8 +244,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 235789725}
-  m_LocalRotation: {x: 0.10664451, y: -0.000000004277064, z: 4.5874154e-10, w: 0.9942972}
-  m_LocalPosition: {x: 0, y: 2.76, z: -6.82}
+  m_LocalRotation: {x: 0.059339937, y: 0.0000000073620403, z: -0.0000000011452203, w: 0.99823785}
+  m_LocalPosition: {x: 0, y: 7.0384903, z: 7.5355077}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -590,8 +590,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1029573126}
-  m_LocalRotation: {x: 0.10664451, y: -0.000000004277064, z: 4.5874154e-10, w: 0.9942972}
-  m_LocalPosition: {x: 0, y: 2.76, z: -6.82}
+  m_LocalRotation: {x: 0.059339937, y: 0.0000000073620403, z: -0.0000000011452203, w: 0.99823785}
+  m_LocalPosition: {x: 0, y: 7.0384903, z: 7.5355077}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -608,7 +608,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: e104bebe744ce41b59aaa91388c49234, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e104bebe744ce41b59aaa91388c49234, type: 3}
       propertyPath: m_LocalPosition.x
@@ -685,7 +685,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1210684206}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.66, z: 0}
+  m_LocalPosition: {x: 0, y: 3.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -701,7 +701,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: e104bebe744ce41b59aaa91388c49234, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e104bebe744ce41b59aaa91388c49234, type: 3}
       propertyPath: m_LocalPosition.x
@@ -911,7 +911,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: e104bebe744ce41b59aaa91388c49234, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e104bebe744ce41b59aaa91388c49234, type: 3}
       propertyPath: m_LocalPosition.x
@@ -973,7 +973,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: e104bebe744ce41b59aaa91388c49234, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e104bebe744ce41b59aaa91388c49234, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1127,8 +1127,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3887600368388687316}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -2.78, z: 0}
+  m_LocalRotation: {x: -0.04745506, y: 0, z: 0, w: 0.9988734}
+  m_LocalPosition: {x: 0, y: 2.17, z: 14.85}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1140,7 +1140,7 @@ Transform:
   - {fileID: 2132284366}
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -5.44, y: 0, z: 0}
 --- !u!65 &4519458281144196975
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1162,7 +1162,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3887600368388687316}
   serializedVersion: 2
-  m_Mass: 100
+  m_Mass: 300
   m_Drag: 0.01
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -1182,21 +1182,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53ee2b00cadb7efacb989d554a4be9c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 50
+  speed: 1000
   springStrength: 10000
   springDamper: 1000
-  tireGripFactor: 1
+  tireGripFactor: 0.95
   ForwardWheelDrive: 1
-  tireMass: 2
+  tireMass: 1
   centerOfMass: {fileID: 1210684206}
-  springTravelDistance: 0.38
+  springTravelDistance: 0.681
   wheelTurningDistance: 0.922
   wheelTurningVelocity: 5
+  tractionControlMultiplier: 1
+  xRotationLimit: 70
+  zRotationLimit: 70
   carWheels:
   - {fileID: 1300519175}
   - {fileID: 1479621998}
   - {fileID: 1925586132}
   - {fileID: 1536939293}
+  jumpForce: 8000
 --- !u!33 &6797798010517938433
 MeshFilter:
   m_ObjectHideFlags: 0
