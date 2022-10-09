@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CarMoviment : MonoBehaviour
 {
@@ -10,12 +11,7 @@ public class CarMoviment : MonoBehaviour
     [SerializeField]
     public float springDamper= 1f;
     [SerializeField]
-    [Range(0f, 2f)]
-    public float tireGripFactor = 0.5f;
-    [SerializeField]
     public bool ForwardWheelDrive = true;
-    [SerializeField]
-    public float tireMass = 1f;
     [SerializeField]
     public GameObject centerOfMass;
     [SerializeField]
@@ -41,16 +37,35 @@ public class CarMoviment : MonoBehaviour
     [SerializeField]
     [Range(0f, 100000f)]
     public float jumpForce = 1f;
+    [SerializeField]
+    public float tireMassReference = 2f;
+    [SerializeField]
+    [Range(0f, 2f)]
+    public float tireGripFactorReference = 1f;
+    [SerializeField]
+    [Range(0f, 2f)]
+    public float driftSlideMultiplier = 0.5f;
+    [Range(1f, 5f)]
+    public float boostForce = 5f;
+    [Range(1,15)]
+    public float bootTimeDisabled = 5;
 
     Rigidbody carRigidbody;
     float throttleInput;
+    float brakeInput;
     float steerInput;
-    bool isJumping = false;
+    float driftInput;
+    float boostInput;
+    float tireMass = 1f;
+    float tireGripFactor = 1f;
+    InputMaster _input;
+    float boostRechargeTime = 0;
 
-    // Start is called before the first frame update
     void Start()
     {
-        carRigidbody = GetComponent<Rigidbody>();
+      _input = new InputMaster();
+      _input.Player.Enable();
+      carRigidbody = GetComponent<Rigidbody>();
     }
 
     void OnDrawGizmos() {
@@ -70,20 +85,15 @@ public class CarMoviment : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    { 
-        throttleInput = Input.GetAxisRaw("Acceleration");
-        steerInput = Input.GetAxisRaw("Steer");
-        bool spaceBar = Input.GetKey(KeyCode.Space);
-        bool jump = Input.GetKey(KeyCode.Q);
+    {   
+        throttleInput = _input.Player.Acceleration.ReadValue<float>();
+        brakeInput = _input.Player.Brake.ReadValue<float>();
+        steerInput = _input.Player.Steering.ReadValue<float>();
+        driftInput = _input.Player.Drift.ReadValue<float>();
+        boostInput = _input.Player.Boost.ReadValue<float>();
 
-        if (spaceBar) {
-          transform.rotation = Quaternion.identity;
-        }
-
-        if (jump) {
-          isJumping = true;
-        } else {
-          isJumping = false;
+        if (boostRechargeTime > 0f) {
+          boostRechargeTime -= Time.deltaTime;
         }
     }
 
@@ -105,31 +115,35 @@ public class CarMoviment : MonoBehaviour
             Vector3 tireWorldVelocity = carRigidbody.GetPointVelocity(wheelTransform.position);
             CalculateSuspentionForce(wheelTransform, tireWorldVelocity, hit.distance);
             CalculateSteeringForce(wheelTransform, tireWorldVelocity);
+            checkIfDrifting();
 
-            if (throttleInput != 0) {
-              ApplyThrottleAcceleration(throttleInput, wheelTransform, index);
+            if (throttleInput != 0 || brakeInput != 0) {
+              ApplyThrottleAcceleration(wheelTransform, index);
             }
-
-            checkIfJumping(wheelTransform);
           }
         }
         index++;
       }
     }
 
-    void checkIfJumping(Transform wheelTransform) {
-      if (isJumping) {
-        carRigidbody.AddForceAtPosition((Vector3.up * jumpForce) / 4, wheelTransform.position);
+    void checkIfDrifting() {
+      if (driftInput != 0f) {
+        tireGripFactor = tireGripFactorReference * driftSlideMultiplier;
+        tireMass = tireMassReference * driftSlideMultiplier;
+  
+        if (boostInput != 0f && boostRechargeTime <= 0f) {
+          addBoost();
+        }
+      } else {
+        tireGripFactor = tireGripFactorReference;
+        tireMass = tireMassReference;
       }
     }
 
-    void avoidTippingOver() {
-     // if (transform.rotation.eulerAngles.x > xRotationLimit) {
-     //   transform.rotation = Quaternion.identity;
-     // }
-     // if (transform.rotation.eulerAngles.z > zRotationLimit) {
-     //   transform.rotation = Quaternion.identity;
-     // }
+    void addBoost() {
+      print("boosted");
+      carRigidbody.AddForce(carRigidbody.velocity* boostForce, ForceMode.Acceleration);
+      boostRechargeTime = bootTimeDisabled;
     }
 
     void CalculateSuspentionForce(Transform wheelTransform, Vector3 tireWorldVelocity, float hitDistance) {
@@ -163,23 +177,24 @@ public class CarMoviment : MonoBehaviour
       carRigidbody.AddForceAtPosition(force, wheelTransform.position);
     }
 
-    void ApplyThrottleAcceleration (float throttleInput, Transform wheelTransform, float index) {
+    void ApplyThrottleAcceleration (Transform wheelTransform, float index) {
       if (ForwardWheelDrive && index <= 1) {
-        addForceToProperWheel(wheelTransform, throttleInput);
+        addForceToProperWheel(wheelTransform);
       } else if (!ForwardWheelDrive && index >= 2) {
-        addForceToProperWheel(wheelTransform, throttleInput);
+        addForceToProperWheel(wheelTransform);
       }
     }
 
-    void addForceToProperWheel(Transform wheelTransform, float throttleInput) {
+    void addForceToProperWheel(Transform wheelTransform) {
       Vector3 wheelPointedDir = wheelTransform.forward;
 
-      Vector3 force = wheelPointedDir * throttleInput * speed * tireGripFactor;
+      Vector3 throttleForce = wheelPointedDir * throttleInput * speed * tireGripFactor;
+      Vector3 brakeForce = wheelPointedDir * brakeInput * speed * tireGripFactor;
 
       Ray throttleForceRay = new Ray(wheelTransform.position, wheelTransform.TransformDirection(wheelTransform.forward));
-      Debug.DrawRay(wheelTransform.position, force, Color.blue);
+      Debug.DrawRay(wheelTransform.position, throttleForce, Color.blue);
 
-      carRigidbody.AddForceAtPosition(force, wheelTransform.position);
+      carRigidbody.AddForceAtPosition(throttleForce - brakeForce, wheelTransform.position);
     }
 
     void RotateFrontWheels (float input) {

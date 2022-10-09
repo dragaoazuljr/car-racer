@@ -244,13 +244,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 235789725}
-  m_LocalRotation: {x: 0.059339937, y: 0.0000000073620403, z: -0.0000000011452203, w: 0.99823785}
-  m_LocalPosition: {x: 0, y: 7.0384903, z: 7.5355077}
+  m_LocalRotation: {x: 0.05933994, y: 0.0000000030494567, z: -4.7436577e-10, w: 0.99823785}
+  m_LocalPosition: {x: 0, y: 2.4584901, z: -8.314493}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!81 &235789727
 AudioListener:
@@ -590,14 +590,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1029573126}
-  m_LocalRotation: {x: 0.059339937, y: 0.0000000073620403, z: -0.0000000011452203, w: 0.99823785}
-  m_LocalPosition: {x: 0, y: 7.0384903, z: 7.5355077}
+  m_LocalRotation: {x: 0.05933994, y: 0.0000000030494567, z: -4.7436577e-10, w: 0.99823785}
+  m_LocalPosition: {x: 0, y: 2.4584901, z: -8.314493}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 206385434}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 26.912, y: 0, z: 0.06}
 --- !u!1001 &1137456788
 PrefabInstance:
@@ -685,7 +685,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1210684206}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.2, z: 0}
+  m_LocalPosition: {x: 0, y: 3.496, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -854,7 +854,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: -18.8, y: 0, z: 0}
 --- !u!1 &1479621998 stripped
 GameObject:
@@ -866,37 +866,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: e104bebe744ce41b59aaa91388c49234, type: 3}
   m_PrefabInstance: {fileID: 1237839495}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1760990873
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1760990874}
-  m_Layer: 0
-  m_Name: Player
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1760990874
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1760990873}
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -1.96, y: 0.098976105, z: 0.5859227}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!1 &1925586132 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: e104bebe744ce41b59aaa91388c49234, type: 3}
@@ -1115,7 +1084,7 @@ GameObject:
   - component: {fileID: 4519458281144196975}
   m_Layer: 0
   m_Name: Car
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1128,7 +1097,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3887600368388687316}
   m_LocalRotation: {x: -0.04745506, y: 0, z: 0, w: 0.9988734}
-  m_LocalPosition: {x: 0, y: 2.17, z: 14.85}
+  m_LocalPosition: {x: 0, y: -2.41, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1185,9 +1154,7 @@ MonoBehaviour:
   speed: 1000
   springStrength: 10000
   springDamper: 1000
-  tireGripFactor: 0.95
   ForwardWheelDrive: 1
-  tireMass: 1
   centerOfMass: {fileID: 1210684206}
   springTravelDistance: 0.681
   wheelTurningDistance: 0.922
@@ -1200,7 +1167,12 @@ MonoBehaviour:
   - {fileID: 1479621998}
   - {fileID: 1925586132}
   - {fileID: 1536939293}
-  jumpForce: 8000
+  jumpForce: 10270
+  tireMassReference: 2
+  tireGripFactorReference: 1
+  driftSlideMultiplier: 0.5
+  boostForce: 2.1
+  bootTimeDisabled: 5
 --- !u!33 &6797798010517938433
 MeshFilter:
   m_ObjectHideFlags: 0
